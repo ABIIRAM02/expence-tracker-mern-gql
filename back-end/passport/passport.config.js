@@ -4,8 +4,11 @@ import bcrypt from "bcryptjs";
 import User from "../models/user.model.js";
 import { GraphQLLocalStrategy } from "graphql-passport";
 
+// ? Serialization is the process of converting a data structure or object into a format 
+// ? that can be stored or transmitted.
+
 export const configurePassport = async () => {
-	passport.serializeUser((user, done) => {
+	passport.serializeUser((user, done) => { 
 		console.log("Serializing user");
 		done(null, user.id);
 	});
@@ -25,12 +28,12 @@ export const configurePassport = async () => {
 			try {
 				const user = await User.findOne({ username });
 				if (!user) {
-					throw new Error("Invalid username or password");
+					throw new Error("username not found");
 				}
 				const validPassword = await bcrypt.compare(password, user.password);
 
 				if (!validPassword) {
-					throw new Error("Invalid username or password");
+					throw new Error("Invalid password");
 				}
 
 				return done(null, user);
