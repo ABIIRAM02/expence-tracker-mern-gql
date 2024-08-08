@@ -5,7 +5,7 @@ type User {
     name:String!
     password:String!
     gender:String!
-    profilePic:String!
+    profilePic:String
 }
 
  type Query{

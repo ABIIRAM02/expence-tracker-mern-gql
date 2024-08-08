@@ -3,19 +3,25 @@ import http from 'http';
 import cors from 'cors';
 import dotenv from 'dotenv'
 
-import { ApolloServer } from "@apollo/server"
-// import { startStandaloneServer } from "@apollo/server/standalone"
+import passport from 'passport';
+import session from 'express-session';
+import connectMongo from 'connect-mongodb-session'
 
+import { buildContext } from "graphql-passport";
+
+import { ApolloServer } from "@apollo/server"
 import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 
 import mergedResolvers from "./resolvers/index.js"
 import mergedTypeDefs from "./typeDefs/index.js"
 import { dbConnection } from './db/dbConnection.js';
+import { configurePassport } from './passport/passport.config.js';
 
 const app = express();
 const httpServer = http.createServer(app);
 dotenv.config()
+configurePassport()
  
 const server = new ApolloServer({
   typeDefs: mergedTypeDefs ,
@@ -23,15 +29,44 @@ const server = new ApolloServer({
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 })
  
-// const { url } = await startStandaloneServer(server)
 await server.start();
+
+// --- storing session in DB
+const MongoDBStore = connectMongo(session)
+
+const store = new MongoDBStore({
+  uri:process.env.MONGO_URI,
+  collection:'sessions'
+})
+
+store.on("error" , err => {console.log(err)})
+// ---
+
+app.use(
+  session({
+    secret:process.env.SECRECT_KEY,
+    resave:false, // ? save session on every request
+    saveUninitialized:false ,
+    cookie:{
+      maxAge:1000 * 60 * 60 * 24 * 7, // ? 1 week
+      httpOnly:true, // ? prevents XSS attacks
+      store:store
+    }
+  })
+)
+
+app.use(passport.initialize())
+app.use(passport.session())
 
 app.use(
   '/',
-  cors(),
+  cors({
+    origin:'http://localhost:3000',
+    credentials:true
+  }),
   express.json(),
   expressMiddleware(server, {
-    context: async ({ req }) => ({ req }),
+    context: async ({req,res}) =>  buildContext({req,res}) ,
   }),
 );
 
