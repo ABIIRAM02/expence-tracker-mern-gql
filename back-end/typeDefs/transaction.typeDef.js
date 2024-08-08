@@ -14,13 +14,13 @@ const transactionTypeDef = `#graphql
 
     type Query {
         transactions: [Transaction!]
-        transaction: Transaction
+        transaction(transactionId:ID!): Transaction
     }
 
     type Mutation{
         createTransaction(input: CreateTransactionInput): Transaction!
         updatetransaction(input: UpdateTransactionInput): Transaction!
-        deletetransaction(transactionId: ID!): Transaction!
+        deletetransaction(transactionId: ID!): deletedTransactionResponce
     }
 
     input CreateTransactionInput{
@@ -39,6 +39,10 @@ const transactionTypeDef = `#graphql
         amount: Float
         loaction: String
         date: String
+    }
+
+    type deletedTransactionResponce{
+        message: String!
     }
 
 `
