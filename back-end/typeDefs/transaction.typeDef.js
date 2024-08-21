@@ -1,6 +1,11 @@
 
 const transactionTypeDef = `#graphql 
 
+    type Query {
+        transactions: [Transaction!]
+        transaction(transactionId:ID!): Transaction
+    }
+
     type Transaction{
         _id: ID
         userId: ID!
@@ -8,19 +13,18 @@ const transactionTypeDef = `#graphql
         paymentType: String!
         category: String!
         amount: Float!
-        loaction: String
+        location: String!
         date: String!
     }
 
-    type Query {
-        transactions: [Transaction!]
-        transaction(transactionId:ID!): Transaction
+    type deletedTransactionResponce{
+        message: String!
     }
 
     type Mutation{
         createTransaction(input: CreateTransactionInput): Transaction!
-        updatetransaction(input: UpdateTransactionInput): Transaction!
-        deletetransaction(transactionId: ID!): deletedTransactionResponce
+        updateTransaction(input: UpdateTransactionInput): Transaction!
+        deleteTransaction(transactionId: ID!): deletedTransactionResponce
     }
 
     input CreateTransactionInput{
@@ -28,23 +32,19 @@ const transactionTypeDef = `#graphql
         paymentType: String!
         category: String!
         amount: Float!
-        loaction: String
+        location: String!
         date: String!
     }
+
     input UpdateTransactionInput{
         transactionId: ID!
         description: String
         paymentType: String
         category: String
         amount: Float
-        loaction: String
+        location: String
         date: String
     }
-
-    type deletedTransactionResponce{
-        message: String!
-    }
-
 `
 
 export default transactionTypeDef

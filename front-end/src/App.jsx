@@ -9,15 +9,14 @@ import UpdateTransaction from './pages/UpdateTransaction.jsx'
 import { useQuery } from '@apollo/client'
 import { GET_AUTH_USER } from './graphql/queries/user.query.js'
 import { Toaster } from 'react-hot-toast'
+import Loading from './components/ui/Loading.jsx'
 
 function App() {
 
-  const {data, loading, error} = useQuery(GET_AUTH_USER)
+  const {data, loading} = useQuery(GET_AUTH_USER)
   console.log('authUser:' , data);
 
-  if(loading) return <div className='h-screen w-full flex justify-center items-center'>
-    <div className='w-6 h-6 border-t-2 border-b-2 mx-2 rounded-full animate-spin' ></div>
-  </div>
+  if(loading) return <Loading />
 
   return (
     <>

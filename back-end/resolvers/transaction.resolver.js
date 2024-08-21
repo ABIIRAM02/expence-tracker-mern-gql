@@ -15,9 +15,9 @@ const transactionResolver = {
         throw new Error(error.message)
       }
     },
-    transaction: async (_,{transactionId})=>{
+    transaction: async (_,{transactionId})=>{      
         try {
-            const transaction = await Transaction.findById({transactionId})
+            const transaction = await Transaction.findById(transactionId)
             return transaction
         } catch (error) {
             console.error('Error while getting transaction:', error )
@@ -26,10 +26,12 @@ const transactionResolver = {
     }
   },
   Mutation: {
-    createTransaction:async (_,input,context) => {
+    createTransaction:async (_,{input},context) => {
+      console.log(input);
+      
         try {
             const newTransaction = new Transaction({
-                userId:context.getUser()._id,
+                userId:await context.getUser()?._id,
                 ...input,
             })
             await newTransaction.save()
@@ -39,7 +41,7 @@ const transactionResolver = {
             throw new Error('Error while creating Transaction:', error)
         }
     },
-    updatetransaction:async (_,input,context) => {
+    updateTransaction:async (_,{input},context) => {
         try {
             const updatedTransaction = await Transaction.findByIdAndUpdate(input.transactionId,input,{new:true})
             return updatedTransaction
@@ -48,7 +50,7 @@ const transactionResolver = {
             throw new Error('Error while updating Transaction:', error)
         }
     },
-    deletetransaction:async (_,input,context) => {
+    deleteTransaction:async (_,input,context) => {
         try {
             await Transaction.findByIdAndDelete(input.transactionId)
             return {message: 'Transaction deleted sucessfully'}
