@@ -6,7 +6,7 @@ const userResolver = {
   Query: {
     authUser:async (_,__,context) => {
         try {
-            const user =await context.getUser()
+            const user = await context.getUser()
             return user
         } catch (error) {
             console.error('Error while getting user:', error)
@@ -33,18 +33,19 @@ const userResolver = {
       //    TODO 6-> save,context and return the newUser
 
       try {
-        const { name, username, password, gender } = input;
+        const { input : {name, username, password, gender }} = input;
+        
         if (!(name || username || password || gender)) {
           throw new Error("All fields are required");
         }
 
-        const existingUser = User.findOne({ username });
+        const existingUser = await User.findOne({ username });
         if (existingUser) {
           throw new Error("user already exist");
         }
 
-        const salt = bcrypt.genSalt(10);
-        const hashedPassword = bcrypt.hash(password, salt);
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
 
         const malePic = `https://avatar.iran.liara.run/public/boy?username=${username}`;
         const femalePic = `https://avatar.iran.liara.run/public/girl?username=${username}`;
@@ -66,24 +67,25 @@ const userResolver = {
     },
     login: async (_, input, context) => {
       try {
-        const { username, password } = input;
+        const { input: {username, password} } = input;
         if (!(username || password)) throw new Error("Fields cannot be empty");
 
-        const { user } = context.authenticate("graphql-local", {
+        const { user } = await context.authenticate("graphql-local", {
           username,
           password,
         });
-
+        console.log(user);
         await context.login(user);
         return user;
       } catch (error) {
         console.error("error while login:", error);
+        throw new Error(error.message);
       }
     },
     logout: async (_, input, context) => {
       try {
         await context.logout();
-        context.session.destroy((err) => { // ? delets cookie from server-side
+        context.req.session.destroy((err) => { // ? delets cookie from server-side
           console.log(err);
         });
         context.res.clearCookie("connect.sid"); // ? delets cookie from client-side

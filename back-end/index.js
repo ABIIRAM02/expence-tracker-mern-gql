@@ -59,7 +59,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 app.use(
-  '/',
+  '/graphql',
   cors({
     origin:'http://localhost:3000',
     credentials:true

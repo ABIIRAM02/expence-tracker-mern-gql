@@ -27,7 +27,7 @@ type User {
  }
 
  input LoginInput{
-    name : String!
+    username : String!
     password : String!
  }
 

@@ -30,6 +30,7 @@ export const configurePassport = async () => {
 				if (!user) {
 					throw new Error("username not found");
 				}
+				
 				const validPassword = await bcrypt.compare(password, user.password);
 
 				if (!validPassword) {
