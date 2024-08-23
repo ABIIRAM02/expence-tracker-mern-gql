@@ -4,6 +4,7 @@ const transactionTypeDef = `#graphql
     type Query {
         transactions: [Transaction!]
         transaction(transactionId:ID!): Transaction
+        categoryStatistics:[CategoryStatistics!]
     }
 
     type Transaction{
@@ -15,6 +16,11 @@ const transactionTypeDef = `#graphql
         amount: Float!
         location: String!
         date: String!
+    }
+
+    type CategoryStatistics{
+        category:String!,
+        totalAmount:Float!
     }
 
     type deletedTransactionResponce{

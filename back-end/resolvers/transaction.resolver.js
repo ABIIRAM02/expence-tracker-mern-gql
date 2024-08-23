@@ -23,6 +23,21 @@ const transactionResolver = {
             console.error('Error while getting transaction:', error )
             throw new Error(error.message)
         }
+    },
+    categoryStatistics: async (_,__,context) => {
+      const userId = context.getUser()._id
+      const transacitons = await Transaction.find({ userId })
+      const categoryMap = {}
+
+      transacitons.forEach((transaction) => {
+        if(!categoryMap[transaction.category]){
+          categoryMap[transaction.category] = 0
+        }
+
+        categoryMap[transaction.category] += transaction.amount 
+      })
+
+      return Object.entries(categoryMap).map(([category,totalAmount])=> ({category, totalAmount}))
     }
   },
   Mutation: {

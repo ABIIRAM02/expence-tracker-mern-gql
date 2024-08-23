@@ -22,6 +22,8 @@ const app = express();
 const httpServer = http.createServer(app);
 dotenv.config()
 configurePassport()
+
+await dbConnection()
  
 const server = new ApolloServer({
   typeDefs: mergedTypeDefs ,
@@ -47,10 +49,10 @@ app.use(
     secret:process.env.SECRECT_KEY,
     resave:false, // ? save session on every request
     saveUninitialized:false ,
+    store:store,  
     cookie:{
       maxAge:1000 * 60 * 60 * 24 * 7, // ? 1 week
       httpOnly:true, // ? prevents XSS attacks
-      store:store
     }
   })
 )
@@ -71,6 +73,5 @@ app.use(
 );
 
 await new Promise((resolve) => httpServer.listen({ port: 4000 }, resolve));
-await dbConnection()
 
 console.log(`🚀 Server ready at http://localhost:4000/`);

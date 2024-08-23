@@ -13,8 +13,9 @@ const UpdateTransaction = () => {
     variables: { id: id },
   });
 
-  const [updateTransaction, { loading: updationLoading }] =
-    useMutation(UPDATE_TRANSACTION);
+  const [updateTransaction, { loading: updationLoading, client }] = useMutation(UPDATE_TRANSACTION,{
+	refetchQueries:['GetTransactions','GetTransactionStatistics']
+  });
 
   const [formData, setFormData] = useState({
     description: "",
@@ -37,6 +38,7 @@ const UpdateTransaction = () => {
           },
         },
       });
+	  client.resetStore()
       toast.success("Transaction updated sucessfully");
     } catch (error) {
       console.log(error);
