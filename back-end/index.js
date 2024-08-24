@@ -3,6 +3,7 @@ import http from 'http';
 import cors from 'cors';
 import dotenv from 'dotenv'
 import path from 'path';
+import job from './corn.js';
 
 import passport from 'passport';
 import session from 'express-session';
@@ -22,8 +23,10 @@ import { configurePassport } from './passport/passport.config.js';
 const app = express();
 const httpServer = http.createServer(app);
 const __dirname = path.resolve()
+
 dotenv.config()
 configurePassport()
+job.start()
 
 await dbConnection()
  
