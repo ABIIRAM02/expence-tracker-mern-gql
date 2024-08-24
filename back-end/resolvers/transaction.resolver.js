@@ -42,8 +42,6 @@ const transactionResolver = {
   },
   Mutation: {
     createTransaction:async (_,{input},context) => {
-      console.log(input);
-      
         try {
             const newTransaction = new Transaction({
                 userId:await context.getUser()?._id,

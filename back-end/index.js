@@ -3,7 +3,7 @@ import http from 'http';
 import cors from 'cors';
 import dotenv from 'dotenv'
 import path from 'path';
-import job from './corn.js';
+import job from './cron.js';
 
 import passport from 'passport';
 import session from 'express-session';
