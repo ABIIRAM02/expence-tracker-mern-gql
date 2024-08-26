@@ -1,0 +1,26 @@
+services:
+  app:
+    build:
+      context: .  # This assumes the Dockerfile is in the same directory as docker-compose.yml
+      dockerfile: Dockerfile
+    ports:
+       - "4000:4000"  # Maps host port 5000 to container port 4000
+    env_file:
+      - .env  # Optional, if you have a .env file
+networks:
+  default:
+    name: expence-tracker_default
+
+
+
+  # If you're using MongoDB locally instead of Atlas, you could add:
+  # mongo:
+  #   image: mongo
+  #   ports:
+  #     - "27017:27017"
+  #   volumes:
+  #     - mongo-data:/data/db
+
+# If using a local MongoDB, uncomment this:
+# volumes:
+#   mongo-data:

@@ -1,0 +1,32 @@
+# Ignore node_modules in the root and frontend directory
+node_modules
+front-end/node_modules
+
+# Ignore logs and other temporary files
+*.log
+*.tmp
+
+# Ignore the frontend build output (optional, if you build inside the container)
+front-end/dist
+
+# Ignore environment variables file (if you want to provide them separately)
+.env
+
+# Ignore Docker-related files
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Ignore git and related files
+.git
+.gitignore
+
+# Ignore editor specific files
+.vscode
+.idea
+*.sublime-project
+*.sublime-workspace
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
